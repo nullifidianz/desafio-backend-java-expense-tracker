@@ -1,19 +1,19 @@
-package com.nullifidianz;
+package com.nullifidianz.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Expense {
 
     private Long id;
     private String description;
     private Double amount;
-    private Date date;
+    private LocalDate date;
 
     public Expense() {
 
     }
 
-    public Expense(Long id, String description, Double amount, Date date) {
+    public Expense(Long id, String description, Double amount, LocalDate date) {
         this.id = id;
         this.description = description;
         this.amount = amount;
@@ -44,11 +44,11 @@ public class Expense {
         this.amount = amount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
