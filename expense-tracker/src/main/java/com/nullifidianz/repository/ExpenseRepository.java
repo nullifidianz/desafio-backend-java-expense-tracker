@@ -14,8 +14,10 @@ public class ExpenseRepository {
 
     public List<Expense> load() {
         try {
-            if (!storage.exists()) return new ArrayList<>();
-            return mapper.readValue(storage, new TypeReference<>() {});
+            if (!storage.exists())
+                return new ArrayList<>();
+            return mapper.readValue(storage, new TypeReference<>() {
+            });
         } catch (Exception e) {
             throw new RuntimeException("Erro ao carregar dados", e);
         }
@@ -28,4 +30,5 @@ public class ExpenseRepository {
             throw new RuntimeException("Erro ao salvar dados", e);
         }
     }
+
 }
