@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Expense {
 
-    private Long id;
+    private int id;
     private String description;
     private Double amount;
     private LocalDate date;
@@ -13,18 +13,18 @@ public class Expense {
 
     }
 
-    public Expense(Long id, String description, Double amount, LocalDate date) {
+    public Expense(int id, String description, Double amount, LocalDate date) {
         this.id = id;
         this.description = description;
         this.amount = amount;
         this.date = date;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -4,7 +4,6 @@ import com.nullifidianz.model.Expense;
 import com.nullifidianz.repository.ExpenseRepository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public class ExpenseService {
@@ -12,26 +11,33 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private List<Expense> expenses;
 
-    public ExpenseService(ExpenseRepository expenseRepository, List<Expense> expenses) {
+    public ExpenseService(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
-        this.expenses = expenses;
+        this.expenses = expenseRepository.load();
     }
 
     public Expense createExpense(String description, Double amount) {
         if (amount <= 0)
             throw new IllegalArgumentException("Amount must be greater than 0");
-        Long id = expenses.stream().mapToLong(Expense::getId).max().orElse(0L) + 1L;
+        int id = expenses.stream().mapToInt(Expense::getId).max().orElse(0) + 1;
         Expense expense = new Expense(id, description, amount, LocalDate.now());
         expenses.add(expense);
         expenseRepository.save(expenses);
         return expense;
     }
 
-    public List<Expense> getExpenses() {
+    public List<Expense> listAll() {
         return List.copyOf(expenses);
     }
 
-    public Expense updateExpense(Long id, String newDescription, Double newAmmount) {
+    public Expense getExpenseById(int id) {
+        Expense expense = expenses.stream().filter(e -> e.getId() == id).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("expense not found"));
+
+        return expense;
+    }
+
+    public Expense updateExpense(int id, String newDescription, Double newAmmount) {
         Expense expense = expenses.stream().filter(e -> e.getId() == id).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("expense not found"));
 
@@ -45,5 +51,20 @@ public class ExpenseService {
         expenses.add(expense);
         expenseRepository.save(expenses);
         return expense;
+    }
+
+    public double summary() {
+        return expenses.stream().mapToDouble(Expense::getAmount).sum();
+    }
+
+    public double summaryByMonth(int month) {
+        return expenses.stream().filter(e -> e.getDate().getMonthValue() == month).mapToDouble(Expense::getAmount)
+                .sum();
+    }
+
+    public boolean delete(int id) {
+        boolean removed = expenses.removeIf(e -> e.getId() == id);
+        expenseRepository.save(expenses);
+        return removed;
     }
 }
